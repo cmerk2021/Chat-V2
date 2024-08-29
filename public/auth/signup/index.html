@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Sign up</title>
+  <script src="https://cdn.jsdelivr.net/npm/pocketbase/dist/pocketbase.umd.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.13.1/inter.css'>
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@tailwindcss/ui@0.3.1/dist/tailwind-ui.min.css'><link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="flex flex-col justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900 leading-9">
+      Create a new account
+    </h2>
+    <p class="mt-2 text-sm text-center text-gray-600 leading-5 max-w">
+      Or
+      <a href="../login/" class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">
+        log into existing account
+      </a>
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
+        <p style="color:red;" id="error"></p>
+      <form>
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700 leading-5">
+            Username
+          </label>
+
+          <div class="mt-1 rounded-md shadow-sm">
+            <input id="username" name="username" type="username" required="" autofocus="" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
+          </div>
+
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 leading-5">
+            Email address
+          </label>
+
+          <div class="mt-1 rounded-md shadow-sm">
+            <input id="email" name="email" type="email" required="" autofocus="" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
+          </div>
+
+        </div>
+
+        <div class="mt-6">
+          <label for="password" class="block text-sm font-medium text-gray-700 leading-5">
+            Password
+          </label>
+
+          <div class="mt-1 rounded-md shadow-sm">
+            <input id="password" type="password" required="" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
+          </div>
+
+        </div>
+
+        <div class="mt-6">
+          <label for="password-confirm" class="block text-sm font-medium text-gray-700 leading-5">
+            Confirm password
+          </label>
+
+          <div class="mt-1 rounded-md shadow-sm">
+            <input id="password-confirm" type="password" required="" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
+          </div>
+
+        </div>
+
+
+        <div class="mt-6">
+          <span class="block w-full rounded-md shadow-sm">
+            <button type="submit" class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+              Sign up
+            </button>
+          </span>
+        </div>
+      </form>
+      <br>
+      <button onclick="googleAuth();" class="flex justify-center w-full px-4 py-2 text-sm font-medium text-black bg-white border border-black rounded-md hover:bg-grey focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-white-700 transition duration-150 ease-in-out">
+        <img src="../img/google-svgrepo-com.svg" width="20" height="20">
+         <hr style="margin: 2px;">Sign up with Google
+      </button>
+    </div>
+  </div>
+</div>
+<!-- partial -->
+<script src="script.js"></script>
+  
+</body>
+</html>

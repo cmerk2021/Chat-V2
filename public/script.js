@@ -1,6 +1,21 @@
 const pb = new PocketBase('https://connormerk.pockethost.io');
 
+var visitorIdTemp
+const fpPromise = import('https://fpjscdn.net/v3/t1cfxF7F5I4clPsSCOgI')
+    .then(FingerprintJS => FingerprintJS.load())
+
+  // Get the visitorId when you need it.
+  fpPromise
+    .then(fp => fp.get())
+    .then(result => {
+      visitorIdTemp = result.visitorId
+      console.log(visitorIdTemp)
+    })
+const visitorId = visitorIdTemp
+
 const login = localStorage.getItem("logindata")
+
+
 var userData;
 if (!login) {
   localStorage.setItem("windowOrigin", window.location)
@@ -43,7 +58,11 @@ const socket = io();
 	
 socket.on('chat', (msg) => {
   if (msg.text.startsWith("?")) {
-    
+    if (msg.text.startsWith("?ban ")) {
+      const splitString = inputString.split(" ");
+      const toBan = splitString[1]
+      
+    }
   } else if (msg.name == PERSON_NAME) {
   appendMessage(msg.name, PERSON_IMG, "right", msg.text);
   } else {
@@ -57,7 +76,7 @@ msgerForm.addEventListener("submit", event => {
   const msgText = msgerInput.value;
   if (!msgText) return;
 
-  socket.emit('chat', {"name": PERSON_NAME, "text": marked.parse(msgText)});
+  socket.emit('chat', {"name": PERSON_NAME, "text": marked.parse(msgText), "visitorId": visitorId});
 
   //appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
   msgerInput.value = "";

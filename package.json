@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@fingerprintjs/fingerprintjs-pro": "^3.11.0",
     "express": "^4.19.2",
     "pocketbase": "^0.21.5",
     "socket.io": "^4.7.5"

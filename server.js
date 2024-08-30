@@ -2,6 +2,8 @@ const express = require('express');
 const { createServer } = require('node:http');
 const { join } = require('node:path');
 const { Server } = require('socket.io');
+const PocketBase = require('pocketbase/cjs')
+const pb = new PocketBase('https://connormerk.pockethost.io');
 
 const app = express();
 const server = createServer(app);
@@ -14,9 +16,16 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    socket.on('chat', (msg) => {
+    socket.on('chat', async (msg) => {
       console.log('message: ' + msg.text);
       io.emit('chat', msg);
+      const data = {
+        "username": msg.name,
+        "content": msg.text,
+        "fingerprint": msg.visitorId
+    };
+    
+    const record = await pb.collection('messages').create(data);
     });
   });
 

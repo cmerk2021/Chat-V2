@@ -45,7 +45,7 @@ const socket = io();
 socket.on('chat', (msg) => {
   if (msg.text.startsWith("?")) {
     
-  } else if (msg.name = PERSON_NAME) {
+  } else if (msg.name == PERSON_NAME) {
   appendMessage(msg.name, PERSON_IMG, "right", msg.text);
   } else {
     appendMessage(msg.name, PERSON_IMG, "left", msg.text);

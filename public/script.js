@@ -1,5 +1,3 @@
-try {
-
 const pb = new PocketBase('https://connormerk.pockethost.io');
 
 const login = localStorage.getItem("logindata")
@@ -17,6 +15,7 @@ if (!login) {
 const msgerForm = get(".msger-inputarea");
 const msgerInput = get(".msger-input");
 const msgerChat = get(".msger-chat");
+const msgerSend = get(".msger-send-btn")
 
 var PERSON_IMG = "https://static.vecteezy.com/system/resources/previews/023/887/720/non_2x/profile-icon-vector.jpg";
 var PERSON_NAME
@@ -117,47 +116,51 @@ function random(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-// function uploadImage() {
-//   const input = document.createElement('input');
-//   input.type = 'file';
-//   input.accept = 'image/*';
+function uploadImage() {
+  try {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
 
-//   input.addEventListener('change', (event) => {
-//     const file = event.target.files[0];
+  input.addEventListener('change', (event) => {
+    const file = event.target.files[0];
 
-//     if (file) {
-//       const formData = new FormData();
-//       formData.append("image",
-//         file);
+    if (file) {
+      const formData = new FormData();
+      formData.append("image",
+        file);
 
-//       pb.collection("images")
-//         .create({
-//         ["image"]: file,
-//         }, { files: formData })
-//         .then((record) => {
-//           console.log('Image uploaded successfully:', record);
+      pb.collection("images")
+        .create({
+        ["image"]: file,
+        }, { files: formData })
+        .then((record) => {
+          console.log('Image uploaded successfully:', record);
 
-//           const fileName = record["image"]; // Assuming the file field stores the filename
-//           const fileUrl = pb.files.getUrl(record, fileName);
-//           msgerInput.value = `<image src="${fileUrl}" width="100%">`
-//           msgerForm.submit()
-//           setTimeout(() => {
-//             pb.collection('images')
-//               .delete(record.id);
-//           }, 5000)
-//         })
-//         .catch((error) => {
-//           console.error('Error uploading image:', error);
-//           // Handle upload error
-//         });
-//     }
-//   });
+          const fileName = record["image"]; // Assuming the file field stores the filename
+          const fileUrl = pb.files.getUrl(record, fileName);
+          msgerInput.value = `<image src="${fileUrl}" width="100%">`
+          msgerSend.click()
+          setTimeout(() => {
+            pb.collection('images')
+              .delete(record.id);
+          }, 5000)
+        })
+        .catch((error) => {
+          console.error('Error uploading image:', error);
+          // Handle upload error
+        });
+    }
+  });
 
-//   input.click();
+  input.click();
+} catch (error) {
+  alert(error)
+}
 
-// }
+}
 
-// document.getElementById("imagebutton").onclick = uploadImage
+document.getElementById("imagebutton").onclick = uploadImage
 
 window.onerror = function(message, source, lineNo, colNo, error) {
   alert(message)
@@ -166,7 +169,3 @@ window.onerror = function(message, source, lineNo, colNo, error) {
   // Prevent page reload (optional)
   return false;
 };
-
-} catch (error) {
-  alert(error)
-}

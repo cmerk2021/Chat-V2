@@ -1,9 +1,14 @@
+try {
+
+const pb = new PocketBase('https://connormerk.pockethost.io');
+
 const login = localStorage.getItem("logindata")
+var userData;
 if (!login) {
   localStorage.setItem("windowOrigin", window.location)
   window.location.href = "/auth/login"
 } else {
-  const userData = JSON.parse(login)
+  userData = JSON.parse(login)
   localStorage.removeItem("logindata")
   alert("Logged in!")
   console.log(userData)
@@ -13,42 +18,38 @@ const msgerForm = get(".msger-inputarea");
 const msgerInput = get(".msger-input");
 const msgerChat = get(".msger-chat");
 
-const PERSON_IMG = "https://static.vecteezy.com/system/resources/previews/023/887/720/non_2x/profile-icon-vector.jpg";
-const BOT_NAME = "BOT";
-const PERSON_NAME = "Sajad";
+var PERSON_IMG = "https://static.vecteezy.com/system/resources/previews/023/887/720/non_2x/profile-icon-vector.jpg";
+var PERSON_NAME
 
-// ----- FIREBASE -----
+if (userData.meta) {
+  PERSON_NAME = userData.meta.rawUser.given_name
+} else if (userData.record) {
+  PERSON_NAME = userData.record.name
+} else {
+  alert("An unexpected error occurred.")
+}
 
-// import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13/firebase-app.js'
-// import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.13/firebase-database.js";
+if (userData.record.avatar !== "") {
+  PERSON_IMG = userData.record.avatar
+}
 
+if (userData.record.moderator == true) {
+  PERSON_NAME = PERSON_NAME + " [MODERATOR]"
+}
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyD5RnepBgemF1bzXbSMGiw5egWqeeMnZxI",
-//   authDomain: "chat-dbe69.firebaseapp.com",
-//   databaseURL: "https://chat-dbe69-default-rtdb.firebaseio.com/",
-//   projectId: "chat-dbe69",
-//   storageBucket: "chat-dbe69.appspot.com",
-//   messagingSenderId: "973114972335",
-//   appId: "1:973114972335:web:0785b31471e28ad0481c5a",
-//   measurementId: "G-27X4H5XL3Z"
-// };
-
-// const app = initializeApp(firebaseConfig);
-// const database = getDatabase(app);
-
-// const messagesRef = ref(database, 'messages/');
-// onValue(messagesRef, (snapshot) => {
-//   const data = snapshot.val();
-//   console.log(data)
-// });
-
-// ----- END FIREBASE -----
+const moderator = userData.record.moderator
+console.log(moderator)
 
 const socket = io();
 	
 socket.on('chat', (msg) => {
+  if (msg.text.startsWith("?")) {
+    
+  } else if (msg.name = PERSON_NAME) {
   appendMessage(msg.name, PERSON_IMG, "right", msg.text);
+  } else {
+    appendMessage(msg.name, PERSON_IMG, "left", msg.text);
+  }
 });
 
 msgerForm.addEventListener("submit", event => {
@@ -57,7 +58,7 @@ msgerForm.addEventListener("submit", event => {
   const msgText = msgerInput.value;
   if (!msgText) return;
 
-  socket.emit('chat', {"name": PERSON_NAME, "text": msgText});
+  socket.emit('chat', {"name": PERSON_NAME, "text": marked.parse(msgText)});
 
   //appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
   msgerInput.value = "";
@@ -114,4 +115,58 @@ function formatDate(date) {
 
 function random(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
+}
+
+// function uploadImage() {
+//   const input = document.createElement('input');
+//   input.type = 'file';
+//   input.accept = 'image/*';
+
+//   input.addEventListener('change', (event) => {
+//     const file = event.target.files[0];
+
+//     if (file) {
+//       const formData = new FormData();
+//       formData.append("image",
+//         file);
+
+//       pb.collection("images")
+//         .create({
+//         ["image"]: file,
+//         }, { files: formData })
+//         .then((record) => {
+//           console.log('Image uploaded successfully:', record);
+
+//           const fileName = record["image"]; // Assuming the file field stores the filename
+//           const fileUrl = pb.files.getUrl(record, fileName);
+//           msgerInput.value = `<image src="${fileUrl}" width="100%">`
+//           msgerForm.submit()
+//           setTimeout(() => {
+//             pb.collection('images')
+//               .delete(record.id);
+//           }, 5000)
+//         })
+//         .catch((error) => {
+//           console.error('Error uploading image:', error);
+//           // Handle upload error
+//         });
+//     }
+//   });
+
+//   input.click();
+
+// }
+
+// document.getElementById("imagebutton").onclick = uploadImage
+
+window.onerror = function(message, source, lineNo, colNo, error) {
+  alert(message)
+  // Handle the error here
+  console.error(message, source, lineNo, colNo, error);
+  // Prevent page reload (optional)
+  return false;
+};
+
+} catch (error) {
+  alert(error)
 }

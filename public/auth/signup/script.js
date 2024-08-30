@@ -2,23 +2,25 @@ const pb = new PocketBase('https://connormerk-auth.pockethost.io');
 
 const urlParams = new URLSearchParams(window.location.search);
 const redirect = urlParams.get('redirect')
+const origin = localStorage.getItem("origin")
 
 const err = document.getElementById("error")
 
 const form = document.querySelector("form");
 const user_name = document.getElementById("username")
-const username = document.getElementById("email");
+const username = document.getElementById("name");
 const password = document.getElementById("password");
 const password_confirm = document.getElementById("password-confirm")
 
 async function googleAuth() {
     try {
     const authData = await pb.collection('users').authWithOAuth2({ provider: 'google' });
-    if (!redirect || !redirect.includes("https://")) {
+    if (!origin) {
         localStorage.setItem("error", "ERR_INVALID_REDIRECT")
         window.location = "../error"
     } else {
-        window.location = `${redirect}?token=${authData.token}`
+        localStorage.setItem("logindata", JSON.stringify(authData))
+        window.location = origin
     }
 } catch (error) {
     localStorage.setItem("error", error)
@@ -33,8 +35,8 @@ form.addEventListener('submit', async (event) => {
         if (password.value === password_confirm.value) {
             try {
 	        const data = {
-                "name": user_name.value,
-                "email": username.value,
+                "username": user_name.value,
+                "name": username.value,
                 "emailVisibility": true,
                 "password": password.value,
                 "passwordConfirm": password_confirm.value,

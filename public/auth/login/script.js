@@ -1,4 +1,5 @@
 const pb = new PocketBase('https://connormerk-auth.pockethost.io');
+const origin = localStorage.getItem("windowOrigin")
 
 const urlParams = new URLSearchParams(window.location.search);
 const redirect = urlParams.get('redirect')
@@ -12,7 +13,7 @@ const password = document.getElementById("password");
 async function googleAuth() {
     try {
     const authData = await pb.collection('users').authWithOAuth2({ provider: 'google' });
-    const origin = localStorage.getItem("windowOrigin")
+    
     if (!origin) {
         localStorage.setItem("error", "ERR_INVALID_REDIRECT")
         window.location = "../error"
@@ -35,15 +36,16 @@ form.addEventListener('submit', async (event) => {
         password.value,
     );
 
-    if (!redirect || !redirect.includes("https://")) {
+    if (!origin) {
         localStorage.setItem("error", "ERR_INVALID_REDIRECT")
         window.location = "../error"
     } else {
-        window.location = `${redirect}?token=${authData.token}`
+        localStorage.setItem("logindata", JSON.stringify(authData))
+        window.location.href = origin
     }
     
     } catch (e) {
-        err.innerHTML = "Invalid username or password."
+        err.innerHTML = "An unexpected error occurred. Check console for more information. <br>"
     }
 
 });

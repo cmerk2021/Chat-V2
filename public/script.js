@@ -1,17 +1,11 @@
 const pb = new PocketBase('https://connormerk.pockethost.io');
+import Fingerprint from "../modules/fingerprint.js"
 
-var visitorIdTemp
-const fpPromise = import('https://fpjscdn.net/v3/t1cfxF7F5I4clPsSCOgI')
-    .then(FingerprintJS => FingerprintJS.load())
-
-  // Get the visitorId when you need it.
-  fpPromise
-    .then(fp => fp.get())
-    .then(result => {
-      visitorIdTemp = result.visitorId
-      console.log(visitorIdTemp)
-    })
-const visitorId = visitorIdTemp
+async function getFingerprint() {
+  const fingerprint = await Fingerprint(); // Assuming fetchFingerprint is an async function
+  return fingerprint;
+}
+const visitorId = Fingerprint().then(async (value) => {return await value;})
 
 const login = localStorage.getItem("logindata")
 
@@ -35,6 +29,11 @@ const msgerSend = get(".msger-send-btn")
 var PERSON_IMG = "https://static.vecteezy.com/system/resources/previews/023/887/720/non_2x/profile-icon-vector.jpg";
 var PERSON_NAME
 
+if (localStorage.getItem("ban") == "true") {
+  msgerInput.disabled = true
+  msgerInput.placeholder = "You are banned."
+}
+
 if (userData.meta) {
   PERSON_NAME = userData.meta.rawUser.given_name
 } else if (userData.record) {
@@ -57,11 +56,22 @@ console.log(moderator)
 const socket = io();
 	
 socket.on('chat', (msg) => {
-  if (msg.text.startsWith("?")) {
-    if (msg.text.startsWith("?ban ")) {
-      const splitString = inputString.split(" ");
-      const toBan = splitString[1]
+  if (msg.text.startsWith("<p>?ban")) {
+    if (msg.text.startsWith("<p>?ban ") && msg.name.includes("[MODERATOR]")) {
+      const splitString = msg.text.split("?ban ");
+      const toBan = splitString[1].slice(0, -5)
+      if (PERSON_NAME == toBan) {
+        localStorage.setItem("ban", "true")
+        alert("You have been banned! To appeal your ban, email contact@connormerk.com")
+        window.location.reload()
+      }
       
+    } else if (msg.text.startsWith("<p>?unban") && message.name.includes("[MODERATOR]")) {
+      const splitString = msg.text.split("?unban ");
+      const toUnban = splitString[1].slice(0, -5)
+      if (PERSON_NAME == toUnban) {
+        localStorage.removeItem()
+      }
     }
   } else if (msg.name == PERSON_NAME) {
   appendMessage(msg.name, PERSON_IMG, "right", msg.text);
@@ -77,6 +87,7 @@ msgerForm.addEventListener("submit", event => {
   if (!msgText) return;
 
   socket.emit('chat', {"name": PERSON_NAME, "text": marked.parse(msgText), "visitorId": visitorId});
+  console.log(visitorId)
 
   //appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
   msgerInput.value = "";
@@ -188,3 +199,30 @@ window.onerror = function(message, source, lineNo, colNo, error) {
   // Prevent page reload (optional)
   return false;
 };
+
+function showSettingsPopup() {
+  // Create the popup elements
+  const popup = document.createElement('div');
+  popup.classList.add('settings-popup');
+
+  const closeButton = document.createElement('button');
+  closeButton.textContent = 'Close';
+  closeButton.addEventListener('click', () => {
+    popup.style.display = 'none';
+  });
+
+  const content = document.createElement('div');
+  content.textContent = 'This is your settings popup.';
+
+  // Add the elements to the popup
+  popup.appendChild(closeButton);
+  popup.appendChild(content);
+
+  // Append the popup to the document body
+  document.body.appendChild(popup);
+
+  // Show the popup
+  popup.style.display = 'block';
+}
+
+document.getElementById("settings").onclick = showSettingsPopup

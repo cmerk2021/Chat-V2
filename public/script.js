@@ -1,9 +1,10 @@
-const pb = new PocketBase('https://connormerk.pockethost.io');
 import Fingerprint from "../modules/fingerprint.js"
 
-const visitorId = await Fingerprint()
-console.log(visitorId)
+try {
 
+const pb = new PocketBase('https://connormerk.pockethost.io');
+
+const visitorId = await Fingerprint()
 
 
 const msgerForm = get(".msger-inputarea");
@@ -205,3 +206,8 @@ function showSettingsPopup() {
 }
 
 document.getElementById("settings").onclick = showSettingsPopup
+
+} catch (error) {
+  localStorage.setItem("error", error)
+  window.location = "/error"
+}

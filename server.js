@@ -15,7 +15,7 @@ const config = {
   authRequired: true,
   auth0Logout: false,
   secret: process.env.AUTH_SECRET,
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://chat.connormerk.com',
   clientID: 'SgxVwmFqUvYE22C6AwklJF6enI9xxHuA',
   issuerBaseURL: 'https://dev-1xplak4wpjshhzlh.us.auth0.com'
 };

@@ -54,9 +54,9 @@ socket.on('chat', (msg) => {
       }
     }
   } else if (msg.name == PERSON_NAME) {
-  appendMessage(msg.name, PERSON_IMG, "right", msg.text);
+  appendMessage(msg.name, msg.image, "right", msg.text);
   } else {
-    appendMessage(msg.name, PERSON_IMG, "left", msg.text);
+    appendMessage(msg.name, msg.image, "left", msg.text);
   }
 });
 
@@ -66,7 +66,7 @@ msgerForm.addEventListener("submit", event => {
   const msgText = msgerInput.value;
   if (!msgText) return;
 
-  socket.emit('chat', {"name": PERSON_NAME, "text": marked.parse(msgText), "visitorId": visitorId});
+  socket.emit('chat', {"name": PERSON_NAME, "text": marked.parse(msgText),"image": PERSON_IMG, "visitorId": visitorId});
   console.log(visitorId)
 
   //appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);

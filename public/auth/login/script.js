@@ -29,6 +29,9 @@ async function googleAuth() {
 
 form.addEventListener('submit', async (event) => {
     try {
+        const button = document.getElementById("button")
+        button.innerHTML = "Loading"
+        button.disabled = true
 	event.preventDefault();
  
 	const authData = await pb.collection('users').authWithPassword(
@@ -46,6 +49,9 @@ form.addEventListener('submit', async (event) => {
     
     } catch (e) {
         err.innerHTML = "An unexpected error occurred. Check console for more information. <br>"
+        const button = document.getElementById("button")
+        button.innerHTML = "Loading"
+        button.disabled = true
     }
 
 });

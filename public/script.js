@@ -1,25 +1,10 @@
 const pb = new PocketBase('https://connormerk.pockethost.io');
 import Fingerprint from "../modules/fingerprint.js"
 
-async function getFingerprint() {
-  const fingerprint = await Fingerprint(); // Assuming fetchFingerprint is an async function
-  return fingerprint;
-}
-const visitorId = Fingerprint().then(async (value) => {return await value;})
-
-const login = localStorage.getItem("logindata")
+const visitorId = await Fingerprint()
+console.log(visitorId)
 
 
-var userData;
-if (!login) {
-  localStorage.setItem("windowOrigin", window.location)
-  window.location.href = "/auth/login"
-} else {
-  userData = JSON.parse(login)
-  localStorage.removeItem("logindata")
-  alert("Logged in!")
-  console.log(userData)
-}
 
 const msgerForm = get(".msger-inputarea");
 const msgerInput = get(".msger-input");
@@ -34,24 +19,18 @@ if (localStorage.getItem("ban") == "true") {
   msgerInput.placeholder = "You are banned."
 }
 
-if (userData.meta) {
-  PERSON_NAME = userData.meta.rawUser.given_name
-} else if (userData.record) {
-  PERSON_NAME = userData.record.name
-} else {
-  alert("An unexpected error occurred.")
-}
+const response = await fetch("./profile");
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
 
-if (userData.record.avatar !== "") {
-  PERSON_IMG = userData.record.avatar
-}
+    const json = await response.json();
+    PERSON_NAME = json.name
+    PERSON_IMG = json.picture
 
-if (userData.record.moderator == true) {
-  PERSON_NAME = PERSON_NAME + " [MODERATOR]"
+function logout() {
+  window.location.href = "/logout"
 }
-
-const moderator = userData.record.moderator
-console.log(moderator)
 
 const socket = io();
 	

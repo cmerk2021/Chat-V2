@@ -1,10 +1,8 @@
-import Fingerprint from "../modules/fingerprint.js"
-
 try {
 
 const pb = new PocketBase('https://connormerk.pockethost.io');
 
-const visitorId = await Fingerprint()
+const visitorId = await ThumbmarkJS.getFingerprint()
 
 
 const msgerForm = get(".msger-inputarea");

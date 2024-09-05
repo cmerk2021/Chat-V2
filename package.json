@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "npm install && "
+  },
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^4.4.3",
     "@fingerprintjs/fingerprintjs-pro": "^3.11.0",

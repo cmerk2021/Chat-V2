@@ -67,8 +67,8 @@ msgerForm.addEventListener("submit", event => {
   const msgText = msgerInput.value;
   if (!msgText) return;
 
-  if (msgText.startsWith("<p>!")) {
-    if (msgText.startsWith("<p>!room")) {
+  if (msgText.startsWith("!")) {
+    if (msgText.startsWith("!room")) {
       const roomId = prompt("Please enter the room ID you want to join, or leave blank to go back to the public room.")
       if (roomId && roomId !== "") {
         ROOM_ID = roomId

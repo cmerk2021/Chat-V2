@@ -1,11 +1,14 @@
-const express = require('express');
-const { createServer } = require('node:http');
-const { join } = require('node:path');
-const { Server } = require('socket.io');
-const { auth, requiresAuth } = require('express-openid-connect');
-require('dotenv').config();
-const PocketBase = require('pocketbase/cjs')
+import express from 'express';
+import { createServer } from 'node:http';
+import { join } from 'node:path';
+import { Server } from 'socket.io';
+import pkg from 'express-openid-connect';
+const { auth, requiresAuth } = pkg;
+import dotenv from 'dotenv';
+import PocketBase from 'pocketbase';
 const pb = new PocketBase('https://connormerk.pockethost.io');
+
+dotenv.config();
 
 const app = express();
 const server = createServer(app);

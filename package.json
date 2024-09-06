@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "scripts": {
     "build": "npm install && "
   },
@@ -11,6 +12,7 @@
     "express": "^4.19.2",
     "express-openid-connect": "^2.17.1",
     "fingerprintjs": "^0.5.3",
+    "firebase": "^10.13.1",
     "pocketbase": "^0.21.5",
     "socket.io": "^4.7.5",
     "webpack-cli": "^5.1.4"

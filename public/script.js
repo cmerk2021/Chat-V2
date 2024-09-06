@@ -12,6 +12,7 @@ const msgerSend = get(".msger-send-btn")
 
 var PERSON_IMG = "https://static.vecteezy.com/system/resources/previews/023/887/720/non_2x/profile-icon-vector.jpg";
 var PERSON_NAME
+var ROOM_ID = "public"
 
 if (localStorage.getItem("ban") == "true") {
   msgerInput.disabled = true
@@ -54,7 +55,9 @@ socket.on('chat', (msg) => {
   } else if (msg.name == PERSON_NAME) {
   appendMessage(msg.name, msg.image, "right", msg.text);
   } else {
-    appendMessage(msg.name, msg.image, "left", msg.text);
+    if (ROOM_ID == msg.room) {
+      appendMessage(msg.name, msg.image, "left", msg.text);
+    }
   }
 });
 
@@ -64,7 +67,23 @@ msgerForm.addEventListener("submit", event => {
   const msgText = msgerInput.value;
   if (!msgText) return;
 
-  socket.emit('chat', {"name": PERSON_NAME, "text": marked.parse(msgText),"image": PERSON_IMG, "visitorId": visitorId});
+  if (msgText.startsWith("<p>!")) {
+    if (msgText.startsWith("<p>!room")) {
+      const roomId = prompt("Please enter the room ID you want to join, or leave blank to go back to the public room.")
+      if (roomId && roomId !== "") {
+        ROOM_ID = roomId
+        alert("Joined " + roomId + " room.")
+        document.getElementById("roomId").innerHTML = "Connor Merk Chat - " + ROOM_ID
+      } else {
+        ROOM_ID = "public"
+        alert("You have joined the public room.")
+        document.getElementById("roomId").innerHTML = "Connor Merk Chat - " + ROOM_ID
+      }
+    }
+  } else {
+    socket.emit('chat', {"name": PERSON_NAME, "text": marked.parse(msgText),"image": PERSON_IMG, "visitorId": visitorId, "room": ROOM_ID});
+  }
+  
   console.log(visitorId)
 
   //appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);

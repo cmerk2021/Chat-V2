@@ -36,7 +36,7 @@ app.get('/', requiresAuth(), (req, res) => {
 
 app.get('/api/ray-id', (req, res) => {
   const rayId = crypto.randomUUID
-  res.send(rayId)
+  res.send({rayId})
 })
 
 app.get('/modules/fingerprint.js', (req, res) => {

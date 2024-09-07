@@ -30,7 +30,7 @@ app.use(express.static('public'));
 app.use(express.static('modules'));
 app.use(express.static('node-modules'));
 
-app.get('/', requiresAuth(), (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html'); // Serve the index.html file directly
 });
 
@@ -40,6 +40,20 @@ app.get('/modules/fingerprint.js', (req, res) => {
 
 app.get('/profile', requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
+});
+
+app.all('*', (req, res) => {
+  res.status(404).sendFile('/public/404/index.html', {
+    root: __dirname + '/public/404'
+  })
+    .then(() => {
+      // Send additional files here using res.sendFile or res.send
+      res.sendFile('/public/404/style.css', { root: __dirname + '/public/404' });
+      // Add more files as needed
+    })
+    .catch(err => {
+      console.error('Error sending 404 files:', err);
+    });
 });
 
 io.on('connection', (socket) => {
@@ -56,7 +70,7 @@ io.on('connection', (socket) => {
     try {
       const record = await pb.collection('messages').create(data);
     } catch (error) {
-      
+
     }
     });
   });

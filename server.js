@@ -50,7 +50,7 @@ app.get('/', requiresAuth(), (req, res) => {
 });
 
 app.get("/logs", (req, res) => {
-  res.sendFile("combined.log")
+  res.sendFile(path.join(__dirname, 'combined.log'))
 })
 
 app.get('/api/ray-id', (req, res) => {

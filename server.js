@@ -16,7 +16,7 @@ const io = new Server(server);
 
 const config = {
   authRequired: true,
-  auth0Logout: false,
+  auth0Logout: true,
   secret: process.env.AUTH_SECRET,
   baseURL: 'https://chat.connormerk.com',
   clientID: 'SgxVwmFqUvYE22C6AwklJF6enI9xxHuA',
@@ -30,9 +30,14 @@ app.use(express.static('public'));
 app.use(express.static('modules'));
 app.use(express.static('node-modules'));
 
-app.get('/', (req, res) => {
+app.get('/', requiresAuth(), (req, res) => {
   res.sendFile(__dirname + '/public/index.html'); // Serve the index.html file directly
 });
+
+app.get('/api/ray-id', (req, res) => {
+  const rayId = crypto.randomUUID
+  res.send(rayId)
+})
 
 app.get('/modules/fingerprint.js', (req, res) => {
   res.sendFile(__dirname + '/modules/fingerprint.js'); // Serve the index.html file directly
@@ -44,7 +49,7 @@ app.get('/profile', requiresAuth(), (req, res) => {
 
 app.all('*', (req, res) => {
   res.status(404).sendFile('/public/404/index.html', {
-    root: __dirname + '/public/404'
+    root: '/public/404'
   })
     .then(() => {
       // Send additional files here using res.sendFile or res.send

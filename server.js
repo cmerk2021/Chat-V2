@@ -6,6 +6,7 @@ import pkg from 'express-openid-connect';
 const { auth, requiresAuth } = pkg;
 import dotenv from 'dotenv';
 import PocketBase from 'pocketbase';
+import winston from 'winston';
 const pb = new PocketBase('https://connormerk.pockethost.io');
 
 dotenv.config();
@@ -13,6 +14,20 @@ dotenv.config();
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    //
+    // - Write all logs with importance level of `error` or less to `error.log`
+    // - Write all logs with importance level of `info` or less to `combined.log`
+    //
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
+});
 
 const config = {
   authRequired: true,
@@ -33,6 +48,10 @@ app.use(express.static('node-modules'));
 app.get('/', requiresAuth(), (req, res) => {
   res.sendFile(__dirname + '/public/index.html'); // Serve the index.html file directly
 });
+
+app.get("/logs", (req, res) => {
+  res.sendFile("combined.log")
+})
 
 app.get('/api/ray-id', (req, res) => {
   const rayId = crypto.randomUUID
@@ -70,12 +89,12 @@ io.on('connection', (socket) => {
         "content": msg.text,
         "fingerprint": msg.visitorId
     };
-    console.log(msg.visitorId)
+    logger.info(msg)
 
     try {
       const record = await pb.collection('messages').create(data);
     } catch (error) {
-
+      logger.error(error)
     }
     });
   });

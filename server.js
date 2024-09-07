@@ -52,8 +52,12 @@ io.on('connection', (socket) => {
         "fingerprint": msg.visitorId
     };
     console.log(msg.visitorId)
-    
-    const record = await pb.collection('messages').create(data);
+
+    try {
+      const record = await pb.collection('messages').create(data);
+    } catch (error) {
+      
+    }
     });
   });
 
